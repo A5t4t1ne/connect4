@@ -61,3 +61,28 @@ void log_init()
 
     fclose(f);
 }
+
+/**
+ * Cleanup and certain options after logging
+ * @param print_log if true, print the log to stdout
+ */
+void log_end(bool print_log)
+{
+    if (print_log)
+    {
+        FILE *f = fopen("log.txt", "r");
+        if (f == NULL)
+        {
+            perror("Error opening file");
+            return;
+        }
+
+        char c;
+        while ((c = fgetc(f)) != EOF)
+        {
+            putchar(c);
+        }
+
+        fclose(f);
+    }
+}

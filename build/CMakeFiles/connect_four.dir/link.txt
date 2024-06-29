@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/connect_four.dir/board.c.o CMakeFiles/connect_four.dir/log.c.o CMakeFiles/connect_four.dir/main.c.o -o connect_four  -lncurses

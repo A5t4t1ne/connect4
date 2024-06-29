@@ -58,7 +58,9 @@ int main()
             // printw("Up arrow key pressed\n");
             break;
         case KEY_DOWN:
-            drop_piece(&board, selected_col);
+            if (drop_piece(&board, selected_col) == ERR_COL_FULL)
+                break;
+
             char winner = 0;
             if (is_winner(board.bitboards[0]))
                 winner = 'X';
@@ -98,6 +100,8 @@ int main()
     }
 
     endwin();
+
+    log_end(true);
 
     return 0;
 }

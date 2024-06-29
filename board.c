@@ -20,6 +20,9 @@
 /******************************************************
  * Globals
  ******************************************************/
+/**
+ * The default game board configuration.
+ */
 const Board defaultBoard = {
     .bitboards = {0},
     .counter = 0,
@@ -29,6 +32,10 @@ const Board defaultBoard = {
 /******************************************************
  * Function Definitions
  ******************************************************/
+/**
+ * Reset the game board to the default configuration and clear the screen.
+ * @param board The current board
+ */
 void reset_board(Board *board)
 {
     *board = defaultBoard;
@@ -36,6 +43,12 @@ void reset_board(Board *board)
     clear();
 }
 
+/**
+ * Draw the game board.
+ * The argument @ref selected_col is used to put the cursor above the selected column.
+ * @param board The current board
+ * @param selected_col The selected column
+ */
 void draw_board(const Board const *board, int selected_col)
 {
     int max_y = 0, max_x = 0;
@@ -91,6 +104,12 @@ void draw_board(const Board const *board, int selected_col)
     refresh();
 }
 
+/**
+ * Calculate the starting position of the field.
+ * The field will be centered on the screen. Used in @ref draw_board().
+ * @param x The x position
+ * @param y The y position
+ */
 void field_start_pos(int *x, int *y)
 {
     int max_y = 0, max_x = 0;
@@ -100,14 +119,27 @@ void field_start_pos(int *x, int *y)
     *y = (max_y - ROWS) / 2;
 }
 
+/**
+ * Drop a piece in a column
+ * @param board The current board
+ * @param col The column to drop the piece in
+ * @return int Error code
+ */
 int drop_piece(Board *board, int col)
 {
-    board->bitboards[board->counter & 1] |= 1 << board->height[col];
+    if (col < 0 || col >= COLS || board->height[col] > (ROWS * col * 7))
+        return ERR_COL_FULL;
+
+    board->bitboards[board->counter & 1] |= 1l << board->height[col];
     board->moves[board->counter] = col;
     board->counter++;
     board->height[col]++;
 
     draw_board(board, col);
+
+    return ERR_SUCCESS;
+
+    // TODO: Implement animation
 
     // int i;
     // for (i = 0; i < ROWS; i++)
@@ -133,6 +165,11 @@ int drop_piece(Board *board, int col)
     // }
 }
 
+/**
+ * List all possible moves
+ * @param board The current board
+ * @return int* A list of possible moves
+ */
 int *list_moves(const Board *board)
 {
     int cols[COLS] = {0};

@@ -2,3 +2,4 @@ api_key
 main
 test
 test.c
+build/*
